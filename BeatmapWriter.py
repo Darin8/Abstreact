@@ -71,6 +71,10 @@ class BeatmapWriter:
         pattern = re.compile(r'\d+')
         matches = pattern.findall(url)
 
+        if len(matches) != 2:
+            print('[ERROR]: Please input the new website\'s beatmap URL.')
+            self.add_beatmap(mod, row)
+            return
         beatmapset_id = matches[0]
         beatmap_id = matches[1]
 
