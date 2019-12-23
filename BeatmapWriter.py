@@ -1,6 +1,6 @@
 # _*_ coding: utf-8
 
-import urllib2
+import urllib
 import json
 import xlsxwriter
 import requests
@@ -17,55 +17,51 @@ class BeatmapWriter:
         self.osu_api_key = api_key
 
         # Cell Widths
-        self.sheet.set_column(1,1,10)
-        self.sheet.set_column(2,2,13)
-        self.sheet.set_column(3,3,25)
+        self.sheet.set_column(1,1,9)
+        self.sheet.set_column(2,2,12.75)
+        self.sheet.set_column(3,3,26)
 
-        # Round format
-        self.round = self.xlsx.add_format({
-            'align': 'center',
-            'valign': 'vcenter',
-            'border': 5,
-            'bg_color': 'D9EAD3'
-            })
 
     def add_beatmap(self, mod, row):
         # Create new formats, as each section needs their own formats
         # Otherwise, every section will have the same color as the last section
         empty_color = self.xlsx.add_format({})
         top_border = self.xlsx.add_format({
-            'top': 5
+            'top': 1
             })
         top_right_border = self.xlsx.add_format({
-            'top': 5,
-            'right': 5
+            'top': 1,
+            'right': 1
             })
         right_border = self.xlsx.add_format({
-            'right': 5,
+            'right': 1,
             'align': 'center'
             })
         bottom_right_border = self.xlsx.add_format({
-            'right': 5,
-            'bottom': 5,
+            'right': 1,
+            'bottom': 1,
             'align': 'center'
             })
         bottom_border = self.xlsx.add_format({
             'align': 'center',
-            'bottom': 5
+            'bottom': 1
             })
         stats = self.xlsx.add_format({
             'align': 'center'
             })
         title = self.xlsx.add_format({
             'bold': True,
-            'top': 5
+            'top': 1
             })
         thumb = self.xlsx.add_format({
-            'border': 5
+            'top': 1,
+            'left': 1,
+            'bottom': 1,
+            'right': 5
             })
 
         orig_row = row
-        url = raw_input('Enter Beatmap URL: ')
+        url = input('Enter Beatmap URL: ')
 
         # Get ID's
         pattern = re.compile(r'\d+')
@@ -93,7 +89,7 @@ class BeatmapWriter:
         try:
             r = requests.get(url = api_url, params = params)
         except requests.exceptions.RequestException as e:
-            print e
+            print(e)
             sys.exit(1)
 
         if r.status_code == 200:
@@ -192,11 +188,12 @@ class BeatmapWriter:
         # Bottom Border
         self.sheet.write(orig_row+3,3,'',bottom_border)
 
+
     def write_section(self, mod, row, amount):
         section = self.xlsx.add_format({
             'align': 'center',
             'valign': 'vcenter',
-            'border': 5
+            'border': 1
             })
 
         mod_string = ''
@@ -222,9 +219,18 @@ class BeatmapWriter:
         section.set_bg_color(mod_color)
 
         # One map takes 4 rows
-        height = amount*4-1
+        if amount == 0: height = 0
+        else: height = amount*4-1
 
         self.sheet.merge_range(row, 1, row+height, 1, mod_string, section)
 
     def write_round(self, name, row):
-        self.sheet.merge_range(row,1,row+1,10,name,self.round)
+        # Round format
+        round_format = self.xlsx.add_format({
+            'align': 'center',
+            'valign': 'vcenter',
+            'border': 1,
+            'bg_color': 'D9EAD3'
+            })
+
+        self.sheet.merge_range(row,1,row+1,10,name,round_format)

@@ -16,7 +16,7 @@ class Abstreact:
         with open('config.json') as config_file:
             config = json.load(config_file)
 
-        title = raw_input('Enter tournament name: ')
+        title = input('Enter tournament name: ')
         if os.path.exists('./' + title + '.xlsx'):
             os.remove(title + '.xlsx')
 
@@ -24,7 +24,7 @@ class Abstreact:
 
     def round_info(self):
         try:
-            round_amount = int(raw_input("Enter amount of rounds: "))
+            round_amount = int(input("Enter amount of rounds: "))
         except:
             print('[ERROR]: Input must be an integer')
             return self.round_info()
@@ -35,7 +35,7 @@ class Abstreact:
         round_amount = int(round_amount)
         round_name_list = []
         for rounds in range(round_amount):
-            round_name_list.append(raw_input("Enter name for Round " + str(rounds+1) + ": "))
+            round_name_list.append(input("Enter name for Round " + str(rounds+1) + ": "))
         return round_name_list
 
     def write_mod(self, mod, round_name):
@@ -58,7 +58,7 @@ class Abstreact:
             self.row_counter+=5
         else:
             try:
-                map_amount = int(raw_input('Enter amount of ' + mod_string + ' maps for ' + str(round_name) + ': '))
+                map_amount = int(input('Enter amount of ' + mod_string + ' maps for ' + str(round_name) + ': '))
             except:
                 print('[ERROR]: Input must be an integer')
                 self.write_mod(mod, round_name)
@@ -85,13 +85,13 @@ class Abstreact:
             # Prompt whether round contains tiebreaker & forcemod
             tb_bool = ''
             fm_bool = ''
-            fm_bool = raw_input('Does ' + round_name + ' contain a force/freemod section? (Y/n): ')
+            fm_bool = input('Does ' + round_name + ' contain a force/freemod section? (Y/n): ')
             if fm_bool.lower() == 'n':
                 self.forcemod = False
             else:
                 self.forcemod = True
 
-            tb_bool = raw_input('Does ' + round_name + ' contain a tiebreaker? (Y/n): ')
+            tb_bool = input('Does ' + round_name + ' contain a tiebreaker? (Y/n): ')
             if tb_bool.lower() == 'n':
                 self.tiebreaker = False
             else:
